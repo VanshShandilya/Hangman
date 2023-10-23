@@ -1,10 +1,11 @@
-import random
+from random import choice
 
 
 class Hangman:
     def __init__(self) -> None:
         self.new_word()
         self.__wrong_guesses = 0
+        self.__guesses = set()
         self.text_art = [
             "  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========",
             "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========",
@@ -16,16 +17,42 @@ class Hangman:
         ]
 
     def __repr__(self) -> str:
-        return self.text_art[self.__wrong_guesses]
+        repr = self.text_art[self.__wrong_guesses]
+        if self.__wrong_guesses < 6:
+            repr += f"\n\nWord = {self.print_word()}\nGuessed Letters = {', '.join(sorted(self.__guesses))}"
+        return repr
 
     def new_word(self) -> None:
         with open("words.txt", "r") as f:
             words = f.read().split()
-            self.word = random.choice(words)
+            self.word = choice(words)
+
+    def print_word(self) -> str:
+        return "".join(
+            letter if letter in self.__guesses else "_" for letter in self.word
+        )
+
+    def main(self) -> bool:
+        while True:
+            print(self)
+            if self.__wrong_guesses == 6:
+                return False
+            elif '_' not in self.print_word():
+                return True
+            while True:
+                guess = input("Guess a Letter: ")
+                if guess in self.__guesses:
+                    print("Letter already guessed, try a different one")
+                else:
+                    break
+            if guess not in self.word:
+                self.__wrong_guesses += 1
+            self.__guesses.add(guess)
 
 
 if __name__ == "__main__":
     hangman = Hangman()
-    for i in range(7):
-        hangman._Hangman__wrong_guesses = i
-        print(hangman)
+    if hangman.main():
+        print('You Win')
+    else:
+        print('You Lose')
