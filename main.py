@@ -19,7 +19,8 @@ class Hangman:
     def __repr__(self) -> str:
         repr = self.text_art[self.__wrong_guesses]
         if self.__wrong_guesses < 6:
-            repr += f"\n\nWord = {self.print_word()}\nGuessed Letters = {', '.join(sorted(self.__guesses))}"
+            repr += f"""\n\nWord -> {self.print_word()}
+Guessed Letters -> {', '.join(sorted(self.__guesses))}"""
         return repr
 
     def new_word(self) -> None:
@@ -41,8 +42,12 @@ class Hangman:
                 return True
             while True:
                 guess = input("Guess a Letter: ")
-                if guess in self.__guesses:
-                    print("Letter already guessed, try a different one")
+                if not guess.isalpha():
+                    print("Please Enter a letter. ")
+                elif len(guess) > 1:
+                    print("Please only enter a single character.")
+                elif guess in self.__guesses:
+                    print("Letter already guessed, try a different one.")
                 else:
                     break
             if guess not in self.word:
