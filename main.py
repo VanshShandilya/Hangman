@@ -33,13 +33,13 @@ Guessed Letters -> {', '.join(sorted(self.__guesses))}"""
             letter if letter in self.__guesses else "_" for letter in self.word
         )
 
-    def main(self) -> bool:
+    def main(self) -> tuple[bool, str]:
         while True:
             print(self)
             if self.__wrong_guesses == 6:
-                return False
-            elif '_' not in self.print_word():
-                return True
+                return (False, self.word)
+            elif "_" not in self.print_word():
+                return (True, self.word)
             while True:
                 guess = input("Guess a Letter: ")
                 if not guess.isalpha():
@@ -57,7 +57,9 @@ Guessed Letters -> {', '.join(sorted(self.__guesses))}"""
 
 if __name__ == "__main__":
     hangman = Hangman()
-    if hangman.main():
-        print('You Win')
+    result = hangman.main()
+    if result[0]:
+        print("You Win.")
     else:
-        print('You Lose')
+        print("You Lose.")
+    print(f"The word was {result[1]}")
